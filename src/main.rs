@@ -1,6 +1,9 @@
 use std::fmt;
 use std::fs;
 
+mod piece;
+mod board;
+
 struct Round {
     // White always has a move
     white: String,
@@ -55,4 +58,7 @@ fn main() {
         println!("ROUND {}: {}",i,r);
         i = i + 1;        
     }
+    //
+    let b = board::INITIAL;
+    println!("{}",b);
 }
