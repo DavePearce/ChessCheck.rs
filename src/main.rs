@@ -3,7 +3,9 @@ use std::fs;
 
 mod piece;
 mod board;
-
+mod moves;
+mod squares;
+    
 struct Round {
     // White always has a move
     white: String,

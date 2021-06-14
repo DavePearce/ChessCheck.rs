@@ -9,8 +9,7 @@ pub struct Board {
 }
 
 /**
- * Constant defining the starting board of
- * a chess game.
+ * Constant defining the starting board of a chess game.
  */
 pub const INITIAL: Board = Board {
     squares: [
