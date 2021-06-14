@@ -22,9 +22,19 @@ impl fmt::Display for Round {
 }
 
 fn parse_line(line: &str) -> Round {
+    let mut iter = line.split(" ");
+    // Convert white to string
+    let w = iter.next().unwrap().to_string();
+    // Convert baclk to optional string
+    let _b = iter.next();
+    //
+    let b = match _b {
+        Some(s) => { Some(s.to_string()) }
+        None => None
+    };
     return Round{
-        white: line.to_string(),
-        black: None
+        white: w,
+        black: b
     };
 }
 
