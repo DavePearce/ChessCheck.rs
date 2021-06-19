@@ -5,6 +5,7 @@ mod piece;
 mod board;
 mod moves;
 mod squares;
+mod game;
     
 struct Round {
     // White always has a move
