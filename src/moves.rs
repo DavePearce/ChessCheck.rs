@@ -22,8 +22,8 @@ pub fn from_str(s:&str) -> Result<PhysicalMove,()> {
     if s.len() < 5 || s.len() > 6 {
         Err(())
     } else if s.len() == 5 {
-        let mut f = squares::from_str(&s[0..2])?;
-        let mut t = squares::from_str(&s[3..5])?;
+        let f = squares::from_str(&s[0..2])?;
+        let t = squares::from_str(&s[3..5])?;
         // Done
         Ok(PhysicalMove {
             piece: WHITE_PAWN,
@@ -31,9 +31,9 @@ pub fn from_str(s:&str) -> Result<PhysicalMove,()> {
             to: t,
         })
     } else {
-        let mut p = piece::from_str(&s[0..1])?;
-        let mut f = squares::from_str(&s[1..3])?;
-        let mut t = squares::from_str(&s[4..6])?;
+        let p = piece::from_str(&s[0..1])?;
+        let f = squares::from_str(&s[1..3])?;
+        let t = squares::from_str(&s[4..6])?;
         // Done
         Ok(PhysicalMove {
             piece: p,
@@ -62,9 +62,19 @@ impl Move for PhysicalMove {
     }
 }
 
+/**
+ * Generic debugging output.
+ */
 impl fmt::Display for PhysicalMove {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f,"{}{}-{}",self.piece,self.from,self.to)
+	match self.piece.kind {
+	    Kind::Pawn => {
+		write!(f,"{}-{}",self.from,self.to)
+	    }
+	    _ => {
+		write!(f,"{}{}-{}",self.piece,self.from,self.to)
+	    }
+	}        
     }
 }
 

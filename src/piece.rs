@@ -17,8 +17,8 @@ pub enum Kind {
  */
 #[derive(Copy, Clone)]
 pub struct Piece {
-    white: bool,
-    kind: Kind,
+    pub white: bool,
+    pub kind: Kind,
 }
 
 /**
