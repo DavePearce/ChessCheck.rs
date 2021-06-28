@@ -10,7 +10,7 @@ use std::str;
  * Represents a given move in the game, which could be moving a piece,
  * taking another piece and/or putting the opposition in Check.
  */
-pub trait Move: fmt::Display + str::FromStr {
+pub trait Move: fmt::Display {
     /**
      * Apply a given move to the board, either producing an updated
      * board (success) or nothing (failure).
@@ -18,35 +18,35 @@ pub trait Move: fmt::Display + str::FromStr {
     fn apply(&mut self, board: Board) -> Option<Board>;
 }
 
-pub fn from_str(s:&str) -> Result<PhysicalMove,()> {
-    if s.len() < 5 || s.len() > 6 {
-        Err(())
-    } else if s.len() == 5 {
-        let f = squares::from_str(&s[0..2])?;
-        let t = squares::from_str(&s[3..5])?;
-        // Done
-        Ok(PhysicalMove {
-            piece: WHITE_PAWN,
-            from: f,
-            to: t,
-        })
+pub fn from_str(s:&str) -> Result<Move,()> {
+    parse_move(s)
+}
+
+fn parse_move(mut s:&str) -> Result<Move,()> {
+    let piece : Piece;
+    // Parse piece (if exists)       
+    if piece::is_char(&s[0..1]) {
+	// Piece given
+	piece = piece::from_str(&s[0..1])?;
+	s = &s[1..];
     } else {
-        let p = piece::from_str(&s[0..1])?;
-        let f = squares::from_str(&s[1..3])?;
-        let t = squares::from_str(&s[4..6])?;
-        // Done
-        Ok(PhysicalMove {
-            piece: p,
-            from: f,
-            to: t,
-        })
+	piece = WHITE_PAWN;
     }
+    // Parse from
+    let from = squares::from_str(&s[0..2])?;
+    // Parse to
+    let to = squares::from_str(&s[3..5])?;
+    // Check whether this is a take or not
+    if &s[2..3] == "x" {
+	println!("MATCHED TAKE");
+    }
+    Ok(SimpleMove{piece,from,to})
 }
 
 /**
  * Repreresents the phhysical move of a piece on the board, such as "Bb1-e5".
  */
-pub struct PhysicalMove {
+pub struct SimpleMove {
     piece: Piece,
     from: Square,
     to: Square,
@@ -56,7 +56,7 @@ pub struct PhysicalMove {
  * Logic for deciding whether or not a physical move can be applied.
  * If the move is invalid, then None is returned.
  */
-impl Move for PhysicalMove {
+impl Move for SimpleMove {
     fn apply(&mut self, board: Board) -> Option<Board> {
         None
     }
@@ -65,7 +65,7 @@ impl Move for PhysicalMove {
 /**
  * Generic debugging output.
  */
-impl fmt::Display for PhysicalMove {
+impl fmt::Display for SimpleMove {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 	match self.piece.kind {
 	    Kind::Pawn => {
@@ -75,18 +75,5 @@ impl fmt::Display for PhysicalMove {
 		write!(f,"{}{}-{}",self.piece,self.from,self.to)
 	    }
 	}        
-    }
-}
-
-/**
- * Parse a physical move of the from Xyy-zz (e.g. "Ba1-e5", etc).  Since we cannot 
- * determine from a given move string whether or not the move is for
- * White or Black, we always return a move for White.
- */
-impl str::FromStr for PhysicalMove {
-    type Err = ();
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        self::from_str(s)
     }
 }

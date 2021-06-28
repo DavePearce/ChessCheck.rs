@@ -4,7 +4,7 @@ use std::str;
 
 struct Game {
     // Sequence of moves beggining with White's and alternating between White and Black.
-    moves: Vec<Box<PhysicalMove>>,
+    moves: Vec<Box<SimpleMove>>,
 }
 
 /**
@@ -14,7 +14,7 @@ impl str::FromStr for Game {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut ms = Vec::<Box<PhysicalMove>>::new();
+        let mut ms = Vec::<Box<SimpleMove>>::new();
         // Read line-by-line
         for l in s.lines() {
             // Split moves
@@ -22,13 +22,13 @@ impl str::FromStr for Game {
             //
             match v.len() {
                 1 => {
-                    let wm: PhysicalMove = PhysicalMove::from_str(v[0])?;
+                    let wm: SimpleMove = SimpleMove::from_str(v[0])?;
                     // Append white's move
                     ms.push(Box::new(wm));
                 }
                 2 => {
-                    let wm: PhysicalMove = PhysicalMove::from_str(v[0])?;
-                    let bm: PhysicalMove = PhysicalMove::from_str(v[1])?;
+                    let wm: SimpleMove = SimpleMove::from_str(v[0])?;
+                    let bm: SimpleMove = SimpleMove::from_str(v[1])?;
                     // Append white's move
                     ms.push(Box::new(wm));
                     // Append black's move

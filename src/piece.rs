@@ -38,6 +38,21 @@ pub fn from_str(s: &str) -> Result<Piece, ()> {
 }
 
 /**
+ * Test whether the first character of this string represents a kind
+ * of pice.
+ */
+pub fn is_char(s: &str) -> bool {
+    match s {
+        "N" => true,
+        "B" => true,
+        "R" => true,
+        "Q" => true,
+        "K" => true,
+        _ => false
+    }    
+}
+
+/**
  * Provide textual representation of pieces, where white's pieces are
  * uppercase and black's are lowercase.
  */
