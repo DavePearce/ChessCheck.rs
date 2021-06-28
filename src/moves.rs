@@ -10,7 +10,7 @@ use std::str;
  * Represents a given move in the game, which could be moving a piece,
  * taking another piece and/or putting the opposition in Check.
  */
-pub trait Move: fmt::Display {
+pub trait Move : fmt::Display {
     /**
      * Apply a given move to the board, either producing an updated
      * board (success) or nothing (failure).
@@ -18,11 +18,15 @@ pub trait Move: fmt::Display {
     fn apply(&mut self, board: Board) -> Option<Board>;
 }
 
-pub fn from_str(s:&str) -> Result<Move,()> {
+/**
+ * Parse a given string into a Move.  If the string is invalid, then
+ * an error is returned.
+ */
+pub fn from_str(s:&str) -> Result<Box<dyn Move>,()> {
     parse_move(s)
 }
 
-fn parse_move(mut s:&str) -> Result<Move,()> {
+fn parse_move(mut s:&str) -> Result<Box<dyn Move>,()> {
     let piece : Piece;
     // Parse piece (if exists)       
     if piece::is_char(&s[0..1]) {
@@ -40,11 +44,16 @@ fn parse_move(mut s:&str) -> Result<Move,()> {
     if &s[2..3] == "x" {
 	println!("MATCHED TAKE");
     }
-    Ok(SimpleMove{piece,from,to})
+    Ok(Box::new(SimpleMove{piece,from,to}))
 }
 
+// ================================================================
+// Simple Move
+// ================================================================
+
 /**
- * Repreresents the phhysical move of a piece on the board, such as "Bb1-e5".
+ * Repreresents the movement of a piece on the board, such as "Bb1-e5"
+ * or "b1-e5".  This is the simplest of all moves in the game.
  */
 pub struct SimpleMove {
     piece: Piece,
@@ -73,6 +82,57 @@ impl fmt::Display for SimpleMove {
 	    }
 	    _ => {
 		write!(f,"{}{}-{}",self.piece,self.from,self.to)
+	    }
+	}        
+    }
+}
+
+// ================================================================
+// Simple Take
+// ================================================================
+
+/**
+ * Repreresents a move of a piece on the board which takes another,
+ * such as "Bb1xe5" or "Bb1xQe5".
+ */
+pub struct SimpleTake {
+    // piece doing the taking (the taker)
+    piece: Piece,
+    // location of taker
+    from: Square,
+    // location of takee
+    to: Square,
+    // piece being taken (the takee)    
+    taken: Piece
+}
+
+/**
+ * Logic for deciding whether or not a physical move can be applied.
+ * If the move is invalid, then None is returned.
+ */
+impl Move for SimpleTake {
+    fn apply(&mut self, board: Board) -> Option<Board> {
+        None
+    }
+}
+
+/**
+ * Generic debugging output.
+ */
+impl fmt::Display for SimpleTake {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+	match (self.piece.kind,self.taken.kind) {
+	    (Kind::Pawn,Kind::Pawn) => {
+		write!(f,"{}x{}",self.from,self.to)
+	    }
+	    (Kind::Pawn,_) => {
+		write!(f,"{}x{}{}",self.from,self.taken,self.to)
+	    }
+	    (_,Kind::Pawn) => {
+		write!(f,"{}{}x{}",self.taken,self.from,self.to)
+	    }	    
+	    _ => {
+		write!(f,"{}{}x{}{}",self.piece,self.from,self.taken,self.to)
 	    }
 	}        
     }
