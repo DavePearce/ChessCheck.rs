@@ -26,25 +26,71 @@ pub fn from_str(s:&str) -> Result<Box<dyn Move>,()> {
     parse_move(s)
 }
 
-fn parse_move(mut s:&str) -> Result<Box<dyn Move>,()> {
-    let piece : Piece;
+fn parse_move(s1:&str) -> Result<Box<dyn Move>,()> {
+    // Parse piece (if exists)
+    let (piece,s2) = parse_piece(s1,true);
+    // Parse origin
+    let (from,mut s3) = parse_square(s2)?;
+    // Check whether this is a take or not
+    let (kind,mut s4) = parse_kind(s3);    
+    // Parse piece (if exists)
+    let (taken,s5) = parse_piece(s4,false);
+    // Parse destiation
+    let (to,mut s6) = parse_square(s5)?;
+    // Create appropriate move
+    let m : Box<dyn Move> = if kind {
+	Box::new(SimpleTake{piece,from,to,taken})	
+    } else {
+	Box::new(SimpleMove{piece,from,to})
+    };
+    // Done
+    Ok(m)
+}
+
+/**
+ * Parse a single character piece (e.g. "Q", "K", "B", etc).  If no
+ * valid character piece exists, then assume its a pawn.
+ */
+fn parse_piece(mut s:&str, w:bool) -> (Piece,&str) {
+    let p : Piece;
     // Parse piece (if exists)       
     if piece::is_char(&s[0..1]) {
 	// Piece given
-	piece = piece::from_str(&s[0..1])?;
-	s = &s[1..];
+	p = piece::from_str(&s[0..1]).unwrap();
+	s = skip(s,1);
+    } else if w {
+	p = WHITE_PAWN;
     } else {
-	piece = WHITE_PAWN;
+	p = BLACK_PAWN;
     }
-    // Parse from
-    let from = squares::from_str(&s[0..2])?;
-    // Parse to
-    let to = squares::from_str(&s[3..5])?;
-    // Check whether this is a take or not
-    if &s[2..3] == "x" {
-	println!("MATCHED TAKE");
-    }
-    Ok(Box::new(SimpleMove{piece,from,to}))
+    (p,s)
+}
+
+/**
+ * Parse a square (e.g. "a5", "b3", etc).  This can produce an error
+ * as a location can be incorrectly specified.
+ */
+fn parse_square(s:&str) -> Result<(Square,&str),()> {
+    // Parse square
+    let sq = squares::from_str(&s[0..2])?;
+    // Done
+    Ok((sq,skip(s,2)))
+}
+
+/**
+ * Parse the kind of a move.
+ */
+fn parse_kind(s:&str) -> (bool,&str) {
+    let b = &s[0..1] == "x";
+    //
+    (b,skip(s,1))
+}
+
+/**
+ * Method for moving through a given string slice
+ */
+fn skip(s:&str,i:usize) -> &str {
+    &s[i..]
 }
 
 // ================================================================
@@ -129,7 +175,7 @@ impl fmt::Display for SimpleTake {
 		write!(f,"{}x{}{}",self.from,self.taken,self.to)
 	    }
 	    (_,Kind::Pawn) => {
-		write!(f,"{}{}x{}",self.taken,self.from,self.to)
+		write!(f,"{}{}x{}",self.piece,self.from,self.to)
 	    }	    
 	    _ => {
 		write!(f,"{}{}x{}{}",self.piece,self.from,self.taken,self.to)
