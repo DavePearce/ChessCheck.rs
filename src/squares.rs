@@ -4,9 +4,10 @@ use std::str;
 /**
  * Represents a give position on the board, such as "a1" or "h5", etc.
  */
+#[derive(Debug,PartialEq)]
 pub struct Square {
-    row: u8, // where 0 <= row <= 7
-    col: u8, // where 0 <= col <= 7
+    col: u8, // where 0 <= col <= 7    
+    row: u8  // where 0 <= row <= 7
 }
 
 /**
@@ -69,4 +70,50 @@ impl fmt::Display for Square {
         };
         write!(f,"{}{}",c,self.row+1)
     }
+}
+
+// ======================================================
+// Tests
+// ======================================================
+
+#[test]
+fn test_01() {
+    assert_eq!(from_str("a1").unwrap(), Square{col:0,row:0});
+}
+
+#[test]
+fn test_02() {
+    assert_eq!(from_str("b3").unwrap(), Square{col:1,row:2});
+}
+
+#[test]
+fn test_03() {
+    assert_eq!(from_str("c6").unwrap(), Square{col:2,row:5});
+}
+
+#[test]
+fn test_04() {
+    assert_eq!(from_str("d8").unwrap(), Square{col:3,row:7});
+}
+
+#[test]
+fn test_05() {
+    assert_eq!(from_str("e2").unwrap(), Square{col:4,row:1});
+}
+
+#[test]
+fn test_06() {
+    assert!(from_str("xx").is_err());
+}
+
+
+#[test]
+fn test_07() {
+    assert!(from_str("x").is_err());
+}
+
+
+#[test]
+fn test_08() {
+    assert!(from_str("").is_err());
 }
