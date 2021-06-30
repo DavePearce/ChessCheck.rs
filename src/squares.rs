@@ -106,7 +106,6 @@ fn test_06() {
     assert!(from_str("xx").is_err());
 }
 
-
 #[test]
 fn test_07() {
     assert!(from_str("x").is_err());
@@ -116,4 +115,24 @@ fn test_07() {
 #[test]
 fn test_08() {
     assert!(from_str("").is_err());
+}
+
+#[test]
+fn test_09() {
+    assert!(from_str("a").is_err());
+}
+
+#[test]
+fn test_10() {
+    assert!(from_str("aa").is_err());
+}
+
+#[test]
+fn test_11() {
+    assert!(from_str("a9").is_err());
+}
+
+#[test]
+fn test_12() {
+    assert!(from_str("i1").is_err());
 }
