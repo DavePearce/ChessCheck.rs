@@ -30,13 +30,13 @@ fn parse_move(s1:&str) -> Result<Box<dyn Move>,()> {
     // Parse piece (if exists)
     let (piece,s2) = parse_piece(s1,true);
     // Parse origin
-    let (from,mut s3) = parse_square(s2)?;
+    let (from, s3) = parse_square(s2)?;
     // Check whether this is a take or not
-    let (kind,mut s4) = parse_kind(s3);    
+    let (kind, s4) = parse_kind(s3);    
     // Parse piece (if exists)
     let (taken,s5) = parse_piece(s4,false);
     // Parse destiation
-    let (to,mut s6) = parse_square(s5)?;
+    let (to,  s6) = parse_square(s5)?;
     // Create appropriate move
     let m : Box<dyn Move> = if kind {
 	Box::new(SimpleTake{piece,from,to,taken})	

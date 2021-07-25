@@ -14,12 +14,16 @@ pub struct Square {
  * Convert a string into a square.
  */
 pub fn from_str(s: &str) -> Result<Square, ()> {
-    // Parse column
-    let c = parse_col(&s[0..1]).ok_or(())?;
-    // Parse row
-    let r = parse_row(&s[1..2]).ok_or(())?;    
-    // Done
-    Ok(Square { row: r, col: c })
+    if s.len() < 2 {
+	Err(())
+    } else {
+	// Parse column
+	let c = parse_col(&s[0..1]).ok_or(())?;
+	// Parse row
+	let r = parse_row(&s[1..2]).ok_or(())?;
+	// Done
+	Ok(Square { row: r, col: c })
+    }
 }
 
 fn parse_col(s: &str) -> Option<u8> {

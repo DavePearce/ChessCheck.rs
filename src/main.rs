@@ -10,7 +10,6 @@ use self::moves::Move;
 
 fn main() {
     let ms = vec!["a2-c4","Bb2-c4","b2xd2","Bb2xf3","c2xBe4"];
-    let mut m : Box<dyn Move>;
     //
     for s in ms {
 	let m = moves::from_str(s).unwrap();
