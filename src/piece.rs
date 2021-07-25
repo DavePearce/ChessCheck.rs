@@ -1,7 +1,7 @@
 use std::fmt;
 use std::str;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Debug)]
 pub enum Kind {
     Blank,
     Pawn,
@@ -15,10 +15,17 @@ pub enum Kind {
 /**
  * Define a given piece on the board
  */
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Debug)]
 pub struct Piece {
     pub white: bool,
     pub kind: Kind,
+}
+
+/**
+ * Set the side for a given piece (i.e. white or black).
+ */
+pub fn to_side(b: bool, p: Piece) -> Piece {
+    return Piece{white: b, kind: p.kind};
 }
 
 /**
@@ -106,6 +113,10 @@ impl fmt::Display for Piece {
     }
 }
 
+// ======================================================
+// Piece Constants
+// ======================================================
+
 pub const BLANK: Piece = Piece {
     white: true,
     kind: Kind::Blank,
@@ -160,3 +171,77 @@ pub const BLACK_KING: Piece = Piece {
     white: false,
     kind: Kind::King,
 };
+
+// ======================================================
+// Tests
+// ======================================================
+
+#[test]
+fn test_01() {
+    assert_eq!(from_str("").unwrap(), WHITE_PAWN);
+}
+
+#[test]
+fn test_02() {
+    assert_eq!(from_str("N").unwrap(), WHITE_KNIGHT);
+}
+
+#[test]
+fn test_03() {
+    assert_eq!(from_str("B").unwrap(), WHITE_BISHOP);
+}
+
+#[test]
+fn test_04() {
+    assert_eq!(from_str("R").unwrap(), WHITE_ROOK);
+}
+
+#[test]
+fn test_05() {
+    assert_eq!(from_str("Q").unwrap(), WHITE_QUEEN);
+}
+
+#[test]
+fn test_06() {
+    assert_eq!(from_str("K").unwrap(), WHITE_KING);
+}
+
+#[test]
+fn test_07() {
+    assert_eq!(to_side(false,WHITE_PAWN), BLACK_PAWN);
+}
+
+#[test]
+fn test_08() {
+    assert_eq!(to_side(false,WHITE_KNIGHT), BLACK_KNIGHT);
+}
+
+#[test]
+fn test_09() {
+    assert_eq!(to_side(false,WHITE_BISHOP), BLACK_BISHOP);
+}
+
+#[test]
+fn test_10() {
+    assert_eq!(to_side(false,WHITE_ROOK), BLACK_ROOK);
+}
+
+#[test]
+fn test_11() {
+    assert_eq!(to_side(false,WHITE_QUEEN), BLACK_QUEEN);
+}
+
+#[test]
+fn test_12() {
+    assert_eq!(to_side(false,WHITE_KING), BLACK_KING);
+}
+
+#[test]
+fn test_13() {
+    assert!(from_str("e").is_err());
+}
+
+#[test]
+fn test_14() {
+    assert!(from_str("p").is_err());
+}
