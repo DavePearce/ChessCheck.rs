@@ -48,11 +48,13 @@ pub fn from_str(s1:&str) -> Result<Box<dyn Move>,()> {
     let (taken,s5) = parse_piece(s4,false);
     // Parse destiation
     let (to,  s6) = parse_square(s5)?;
+    // Create simple move
+    let parent = SimpleMove{piece,from,to};
     // Create appropriate move
     let m : Box<dyn Move> = if kind {
-	Box::new(SimpleTake{piece,from,to,taken})	
+	Box::new(SimpleTake{parent,taken})	
     } else {
-	Box::new(SimpleMove{piece,from,to})
+	Box::new(parent)
     };
     // Done
     Ok(m)
@@ -160,12 +162,8 @@ impl fmt::Display for SimpleMove {
  * such as "Bb1xe5" or "Bb1xQe5".
  */
 pub struct SimpleTake {
-    // piece doing the taking (the taker)
-    piece: Piece,
-    // location of taker
-    from: Square,
-    // location of takee
-    to: Square,
+    // Underlying move
+    parent: SimpleMove,
     // piece being taken (the takee)    
     taken: Piece
 }
@@ -175,8 +173,8 @@ pub struct SimpleTake {
  * If the move is invalid, then None is returned.
  */
 impl Move for SimpleTake {
-    fn apply(&self, board: Board) -> Option<Board> {
-        None
+    fn apply(&self, mut board: Board) -> Option<Board> {
+	return self.parent.apply(board);
     }
 }
 
@@ -185,18 +183,18 @@ impl Move for SimpleTake {
  */
 impl fmt::Display for SimpleTake {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-	match (self.piece.kind,self.taken.kind) {
+	match (self.parent.piece.kind,self.taken.kind) {
 	    (Kind::Pawn,Kind::Pawn) => {
-		write!(f,"{}x{}",self.from,self.to)
+		write!(f,"{}x{}",self.parent.from,self.parent.to)
 	    }
 	    (Kind::Pawn,_) => {
-		write!(f,"{}x{}{}",self.from,self.taken,self.to)
+		write!(f,"{}x{}{}",self.parent.from,self.taken,self.parent.to)
 	    }
 	    (_,Kind::Pawn) => {
-		write!(f,"{}{}x{}",self.piece,self.from,self.to)
+		write!(f,"{}{}x{}",self.parent.piece,self.parent.from,self.parent.to)
 	    }	    
 	    _ => {
-		write!(f,"{}{}x{}{}",self.piece,self.from,self.taken,self.to)
+		write!(f,"{}{}x{}{}",self.parent.piece,self.parent.from,self.taken,self.parent.to)
 	    }
 	}        
     }

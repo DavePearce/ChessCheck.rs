@@ -21,11 +21,13 @@ pub struct Piece {
     pub kind: Kind,
 }
 
-/**
- * Set the side for a given piece (i.e. white or black).
- */
-pub fn to_side(b: bool, p: Piece) -> Piece {
-    return Piece{white: b, kind: p.kind};
+impl Piece {
+    /**
+     * Set the side for a given piece (i.e. white or black).
+     */
+    pub fn to_side(&self, b: bool) -> Piece {
+	return Piece{white: b, kind: self.kind};
+    }    
 }
 
 /**
@@ -46,7 +48,7 @@ pub fn from_str(s: &str) -> Result<Piece, ()> {
 
 /**
  * Test whether the first character of this string represents a kind
- * of pice.
+ * of piece.
  */
 pub fn is_char(s: &str) -> bool {
     match s {
@@ -208,32 +210,32 @@ fn test_06() {
 
 #[test]
 fn test_07() {
-    assert_eq!(to_side(false,WHITE_PAWN), BLACK_PAWN);
+    assert_eq!(WHITE_PAWN.to_side(false), BLACK_PAWN);
 }
 
 #[test]
 fn test_08() {
-    assert_eq!(to_side(false,WHITE_KNIGHT), BLACK_KNIGHT);
+    assert_eq!(WHITE_KNIGHT.to_side(false), BLACK_KNIGHT);
 }
 
 #[test]
 fn test_09() {
-    assert_eq!(to_side(false,WHITE_BISHOP), BLACK_BISHOP);
+    assert_eq!(WHITE_BISHOP.to_side(false), BLACK_BISHOP);
 }
 
 #[test]
 fn test_10() {
-    assert_eq!(to_side(false,WHITE_ROOK), BLACK_ROOK);
+    assert_eq!(WHITE_ROOK.to_side(false), BLACK_ROOK);
 }
 
 #[test]
 fn test_11() {
-    assert_eq!(to_side(false,WHITE_QUEEN), BLACK_QUEEN);
+    assert_eq!(WHITE_QUEEN.to_side(false), BLACK_QUEEN);
 }
 
 #[test]
 fn test_12() {
-    assert_eq!(to_side(false,WHITE_KING), BLACK_KING);
+    assert_eq!(WHITE_KING.to_side(false), BLACK_KING);
 }
 
 #[test]
