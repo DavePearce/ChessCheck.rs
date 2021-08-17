@@ -1,5 +1,5 @@
-use super::moves;
-use super::moves::Move;
+use super::muve;
+use super::muve::Move;
 use super::piece::Player;
 use super::board::*;
 use std::fmt;
@@ -15,18 +15,18 @@ pub fn from_str(s: &str) -> Result<Game,()> {
     // Read line-by-line
     for l in s.lines() {
         // Split moves
-        let v: Vec<&str> = l.split(' ').collect();
+        let v: Vec<&str> = l.split_ascii_whitespace().collect();
         //
         match v.len() {
             1 => {
                 // Append white's move
-                ms.push(moves::from_str(v[0],Player::White)?);
+                ms.push(muve::from_str(v[0],Player::White)?);
             }
             2 => {
                 // Append white's move
-                ms.push(moves::from_str(v[0],Player::White)?);
+                ms.push(muve::from_str(v[0],Player::White)?);
                 // Append black's move
-                ms.push(moves::from_str(v[1],Player::Black)?);
+                ms.push(muve::from_str(v[1],Player::Black)?);
             }
             _ => return Err(()),
         }
@@ -70,85 +70,79 @@ impl fmt::Display for Game {
 
 #[test]
 fn test_pawn_01() {
-    let ms = "a2-a3";
-    // Check move sequence
-    check_valid(ms,
-r#"8|r|n|b|q|k|b|n|r|
-7|p|p|p|p|p|p|p|p|
-6|_|_|_|_|_|_|_|_|
-5|_|_|_|_|_|_|_|_|
-4|_|_|_|_|_|_|_|_|
-3|P|_|_|_|_|_|_|_|
-2|_|P|P|P|P|P|P|P|
-1|R|N|B|Q|K|B|N|R|
-  a b c d e f g h"#);    
+    check_valid("a2-a3",
+		//
+		"8|r|n|b|q|k|b|n|r|\n\
+		 7|p|p|p|p|p|p|p|p|\n\
+		 6|_|_|_|_|_|_|_|_|\n\
+		 5|_|_|_|_|_|_|_|_|\n\
+		 4|_|_|_|_|_|_|_|_|\n\
+		 3|P|_|_|_|_|_|_|_|\n\
+		 2|_|P|P|P|P|P|P|P|\n\
+		 1|R|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");    
 }
 
 #[test]
 fn test_pawn_02() {
- let ms = "a2-a3 b7-b6";
-    // Check move sequence
-    check_valid(ms,
-r#"8|r|n|b|q|k|b|n|r|
-7|p|_|p|p|p|p|p|p|
-6|_|p|_|_|_|_|_|_|
-5|_|_|_|_|_|_|_|_|
-4|_|_|_|_|_|_|_|_|
-3|P|_|_|_|_|_|_|_|
-2|_|P|P|P|P|P|P|P|
-1|R|N|B|Q|K|B|N|R|
-  a b c d e f g h"#);
+    check_valid("a2-a3 b7-b6",
+		//
+		"8|r|n|b|q|k|b|n|r|\n\
+		 7|p|_|p|p|p|p|p|p|\n\
+		 6|_|p|_|_|_|_|_|_|\n\
+		 5|_|_|_|_|_|_|_|_|\n\
+		 4|_|_|_|_|_|_|_|_|\n\
+		 3|P|_|_|_|_|_|_|_|\n\
+		 2|_|P|P|P|P|P|P|P|\n\
+		 1|R|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");
 }
 
 #[test]
 fn test_pawn_03() {
- let ms = "a2-a4 b7-b5";
-    // Check move sequence
-    check_valid(ms,
-r#"8|r|n|b|q|k|b|n|r|
-7|p|_|p|p|p|p|p|p|
-6|_|_|_|_|_|_|_|_|
-5|_|p|_|_|_|_|_|_|
-4|P|_|_|_|_|_|_|_|
-3|_|_|_|_|_|_|_|_|
-2|_|P|P|P|P|P|P|P|
-1|R|N|B|Q|K|B|N|R|
-  a b c d e f g h"#);
+    check_valid("a2-a4 b7-b5",
+		"8|r|n|b|q|k|b|n|r|\n\
+		 7|p|_|p|p|p|p|p|p|\n\
+		 6|_|_|_|_|_|_|_|_|\n\
+		 5|_|p|_|_|_|_|_|_|\n\
+		 4|P|_|_|_|_|_|_|_|\n\
+		 3|_|_|_|_|_|_|_|_|\n\
+		 2|_|P|P|P|P|P|P|P|\n\
+		 1|R|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");
 }
 
 #[test]
 fn test_pawn_04() {
-    let ms = "d2-d4 d7-d5\n\
-	      e2-e4 d5xe4";
-    // Check move sequence
-    check_valid(ms,
-r#"8|r|n|b|q|k|b|n|r|
-7|p|p|p|_|p|p|p|p|
-6|_|_|_|_|_|_|_|_|
-5|_|_|_|_|_|_|_|_|
-4|_|_|_|P|p|_|_|_|
-3|_|_|_|_|_|_|_|_|
-2|P|P|P|_|_|P|P|P|
-1|R|N|B|Q|K|B|N|R|
-  a b c d e f g h"#);
+    check_valid("d2-d4 d7-d5\n\
+		 e2-e4 d5xe4",
+		//
+		"8|r|n|b|q|k|b|n|r|\n\
+		 7|p|p|p|_|p|p|p|p|\n\
+		 6|_|_|_|_|_|_|_|_|\n\
+		 5|_|_|_|_|_|_|_|_|\n\
+		 4|_|_|_|P|p|_|_|_|\n\
+		 3|_|_|_|_|_|_|_|_|\n\
+		 2|P|P|P|_|_|P|P|P|\n\
+		 1|R|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");
 }
 
 #[test]
 fn test_pawn_05() {
-    let ms = "d2-d3 d7-d5\n\
-	      e2-e4 d5xe4\n\
-	      d3xe4";
-    // Check move sequence
-    check_valid(ms,
-r#"8|r|n|b|q|k|b|n|r|
-7|p|p|p|_|p|p|p|p|
-6|_|_|_|_|_|_|_|_|
-5|_|_|_|_|_|_|_|_|
-4|_|_|_|_|P|_|_|_|
-3|_|_|_|_|_|_|_|_|
-2|P|P|P|_|_|P|P|P|
-1|R|N|B|Q|K|B|N|R|
-  a b c d e f g h"#);
+    check_valid("d2-d3 d7-d5\n\
+		 e2-e4 d5xe4\n\
+		 d3xe4",
+		//
+		"8|r|n|b|q|k|b|n|r|\n\
+		 7|p|p|p|_|p|p|p|p|\n\
+		 6|_|_|_|_|_|_|_|_|\n\
+		 5|_|_|_|_|_|_|_|_|\n\
+		 4|_|_|_|_|P|_|_|_|\n\
+		 3|_|_|_|_|_|_|_|_|\n\
+		 2|P|P|P|_|_|P|P|P|\n\
+		 1|R|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");
 }
 
 #[test]
@@ -226,18 +220,16 @@ fn test_pawn_20() {
 
 #[test]
 fn test_knight_01() {
-    let ms = vec!["Nb1-a3"];
-    // Check move sequence
-    check(ms,
-r#"8|r|n|b|q|k|b|n|r|
-7|p|p|p|p|p|p|p|p|
-6|_|_|_|_|_|_|_|_|
-5|_|_|_|_|_|_|_|_|
-4|_|_|_|_|_|_|_|_|
-3|N|_|_|_|_|_|_|_|
-2|P|P|P|P|P|P|P|P|
-1|R|_|B|Q|K|B|N|R|
-  a b c d e f g h"#);    
+    check_valid("Nb1-a3",
+	  "8|r|n|b|q|k|b|n|r|\n\
+	   7|p|p|p|p|p|p|p|p|\n\
+	   6|_|_|_|_|_|_|_|_|\n\
+	   5|_|_|_|_|_|_|_|_|\n\
+	   4|_|_|_|_|_|_|_|_|\n\
+	   3|N|_|_|_|_|_|_|_|\n\
+	   2|P|P|P|P|P|P|P|P|\n\
+	   1|R|_|B|Q|K|B|N|R|\n\
+	   -|a b c d e f g h");    
 }
 
 // ======================================================
@@ -245,8 +237,8 @@ r#"8|r|n|b|q|k|b|n|r|
 // ======================================================
 
 /**
- * Check that a given sequence of moves from the initial board end up
- * producing an expected board.
+ * Check that a given game (i.e. sequence of moves) produce an
+ * expected board when applied to the initial board.
  */
 fn check_valid(game: &str, expected: &str) {
     // Parse game string
@@ -267,18 +259,10 @@ fn check_valid(game: &str, expected: &str) {
     assert_eq!(brd,expected);   
 }
 
-fn check(moves: Vec<&str>, expected: &str) {
-    // Apply each move to initial board.  We are not expecting this to
-    // fail.
-    let brd = moves::apply(moves,INITIAL).unwrap().to_string();
-    // Print expected board
-    println!("Expected:\n{}\n",expected);
-    // Print actual board
-    println!("Actual:\n{}",brd);
-    // Check whether they match
-    assert_eq!(brd,expected);   
-}
-
+/**
+ * Check that a given game (i.e. sequence of moves) produce an error
+ * when applied to the initial board.
+ */
 fn check_invalid(game: &str) {
     // Parse game string
     let g = from_str(game).unwrap();

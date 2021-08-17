@@ -5,14 +5,16 @@
 
 mod piece;
 mod board;
-mod moves;
+mod muve;
 mod squares;
 mod game;
-
-use self::moves::Move;
 
 //use self::moves;
 
 fn main() {
-
+    let v : Vec<&str> = "  x y".split_ascii_whitespace().collect();
+    //
+    for s in v {
+	println!("GOT {}",s);
+    }
 }

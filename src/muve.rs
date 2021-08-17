@@ -141,7 +141,6 @@ impl Move for SimpleMove {
 	// Read out piece at to position (should be blank)
 	let t = board.get(self.to);
 	// Check piece matches what is expected
-	println!("GOT {} == {}",p,self.piece);
 	if p == self.piece && t == BLANK && p.can_move(board,self.from,self.to) {
 	    // Remove piece from board
 	    board = board.set(self.from,BLANK);
