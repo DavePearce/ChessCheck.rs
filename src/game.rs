@@ -72,7 +72,7 @@ impl fmt::Display for Game {
 fn test_pawn_01() {
     let ms = "a2-a3";
     // Check move sequence
-    check2(ms,
+    check_valid(ms,
 r#"8|r|n|b|q|k|b|n|r|
 7|p|p|p|p|p|p|p|p|
 6|_|_|_|_|_|_|_|_|
@@ -88,7 +88,7 @@ r#"8|r|n|b|q|k|b|n|r|
 fn test_pawn_02() {
  let ms = "a2-a3 b7-b6";
     // Check move sequence
-    check2(ms,
+    check_valid(ms,
 r#"8|r|n|b|q|k|b|n|r|
 7|p|_|p|p|p|p|p|p|
 6|_|p|_|_|_|_|_|_|
@@ -102,9 +102,9 @@ r#"8|r|n|b|q|k|b|n|r|
 
 #[test]
 fn test_pawn_03() {
- let ms = vec!["a2-a4","b7-b5"];
+ let ms = "a2-a4 b7-b5";
     // Check move sequence
-    check(ms,
+    check_valid(ms,
 r#"8|r|n|b|q|k|b|n|r|
 7|p|_|p|p|p|p|p|p|
 6|_|_|_|_|_|_|_|_|
@@ -118,10 +118,10 @@ r#"8|r|n|b|q|k|b|n|r|
 
 #[test]
 fn test_pawn_04() {
-    let ms = vec!["d2-d4","d7-d5",
-		  "e2-e4","d5xe4"];
+    let ms = "d2-d4 d7-d5\n\
+	      e2-e4 d5xe4";
     // Check move sequence
-    check(ms,
+    check_valid(ms,
 r#"8|r|n|b|q|k|b|n|r|
 7|p|p|p|_|p|p|p|p|
 6|_|_|_|_|_|_|_|_|
@@ -135,11 +135,11 @@ r#"8|r|n|b|q|k|b|n|r|
 
 #[test]
 fn test_pawn_05() {
-    let ms = vec!["d2-d3","d7-d5",
-		  "e2-e4","d5xe4",
-		  "d3xe4"];
+    let ms = "d2-d3 d7-d5\n\
+	      e2-e4 d5xe4\n\
+	      d3xe4";
     // Check move sequence
-    check(ms,
+    check_valid(ms,
 r#"8|r|n|b|q|k|b|n|r|
 7|p|p|p|_|p|p|p|p|
 6|_|_|_|_|_|_|_|_|
@@ -153,93 +153,71 @@ r#"8|r|n|b|q|k|b|n|r|
 
 #[test]
 fn test_pawn_10() {
-    let ms = vec!["e2-e5"];
-    // Check failed
-    assert!(moves::apply(ms,INITIAL).is_none());
+    check_invalid("e2-e5");
 }
 
 #[test]
 fn test_pawn_11() {
-    let ms = vec!["e2-e3","c7-c6",
-		  "e3-e5"];
-    // Check failed    
-    assert!(moves::apply(ms,INITIAL).is_none());
+    check_invalid("e2-e3 c7-c6\n\
+		   e3-e5");
 }
 
 #[test]
 fn test_pawn_12() {
-    let ms = vec!["e2-e4","e7-e5",
-		  "e4-d5"];
-    // Check failed    
-    assert!(moves::apply(ms,INITIAL).is_none());
+    check_invalid("e2-e4 e7-e5\n\
+		   e4-d5");
 }
 
 #[test]
 fn test_pawn_13() {
-    let ms = vec!["e2-e4","e7-e5",
-		  "e4-e3"];
-    // Check failed    
-    assert!(moves::apply(ms,INITIAL).is_none());
+    check_invalid("e2-e4 e7-e5\n\
+		   e4-e3");
 }
 
 #[test]
 fn test_pawn_14() {
-    let ms = vec!["a2-a3","d7-d5",
-		  "a3-a4","d5-d4",
-		  "a4-a5","d4-d3",
-		  "d2-d4"];
-    // Check failed    
-    assert!(moves::apply(ms,INITIAL).is_none());
+    check_invalid("a2-a3 d7-d5\n\
+		   a3-a4 d5-d4\n\
+		   a4-a5 d4-d3\n\
+		   d2-d4");
 }
 
 #[test]
 fn test_pawn_15() {
-    let ms = vec!["a2-a3","d7-d5",
-		  "a3-a4","d5-d4",
-		  "d2-d4"];
-    // Check failed    
-    assert!(moves::apply(ms,INITIAL).is_none());
+    check_invalid("a2-a3 d7-d5\n\
+		   a3-a4 d5-d4\
+		   d2-d4");
 }
 
 #[test]
 fn test_pawn_16() {
-    let ms = vec!["e2-e4","e7-e5",
-		  "e4xe5"];
-    // Check failed    
-    assert!(moves::apply(ms,INITIAL).is_none());
+    check_invalid("e2-e4 e7-e5\n\
+		   e4xe5");
 }
 
 #[test]
 fn test_pawn_17() {
-    let ms = vec!["c2-c4","e7-e6",
-		  "c4xe6"];
-    // Check failed    
-    assert!(moves::apply(ms,INITIAL).is_none());
+    check_invalid("c2-c4 e7-e6\n\
+		   c4xe6");
 }
 
 #[test]
 fn test_pawn_18() {
-    let ms = vec!["c2-c4","d7-d6",
-		  "c4xd6"];
-    // Check failed    
-    assert!(moves::apply(ms,INITIAL).is_none());
+    check_invalid("c2-c4 d7-d6\n\
+		   c4xd6");
 }
 
 #[test]
 fn test_pawn_19() {
-    let ms = vec!["c2-c4","d7-d6",
-		  "c4xd5"];
-    // Check failed    
-    assert!(moves::apply(ms,INITIAL).is_none());
+    check_invalid("c2-c4 d7-d6\n\
+		   c4xd5");
 }
 
 #[test]
 fn test_pawn_20() {
-    let ms = vec!["c2-c4","d7-d5",
-		  "c4-c5","d5-d4",
-		  "c5xd4"];
-    // Check failed    
-    assert!(moves::apply(ms,INITIAL).is_none());
+    check_invalid("c2-c4 d7-d5\n\
+		   c4-c5 d5-d4\n\
+		   c5xd4");
 }
 
 // ======================================================
@@ -270,7 +248,7 @@ r#"8|r|n|b|q|k|b|n|r|
  * Check that a given sequence of moves from the initial board end up
  * producing an expected board.
  */
-fn check2(game: &str, expected: &str) {
+fn check_valid(game: &str, expected: &str) {
     // Parse game string
     let g = from_str(game).unwrap();
     // Apply each move to initial board producing a potentially
@@ -299,4 +277,14 @@ fn check(moves: Vec<&str>, expected: &str) {
     println!("Actual:\n{}",brd);
     // Check whether they match
     assert_eq!(brd,expected);   
+}
+
+fn check_invalid(game: &str) {
+    // Parse game string
+    let g = from_str(game).unwrap();
+    // Apply each move to initial board producing a potentially
+    // updated board.    
+    let obrd = g.apply(INITIAL);
+    // Expect this to have failed
+    assert!(obrd.is_none());    
 }

@@ -22,6 +22,9 @@ pub enum Kind {
 }
 
 impl Kind {
+    /**
+     * Convert a piece kind to a string for a given player.
+     */
     pub fn to_string(&self,p:Player) -> &str {
 	match p {
 	    Player::White => self.to_white_string(),
@@ -29,6 +32,9 @@ impl Kind {
 	}
     }
 
+    /**
+     * Convert a piece kind to a string for the white player.
+     */    
     pub fn to_white_string(&self) -> &str {
 	match self {
             Kind::Blank => "_",
@@ -41,6 +47,9 @@ impl Kind {
         }
     }
 
+    /**
+     * Convert a piece kind to a string for the black player.
+     */    
     pub fn to_black_string(&self) -> &str {
 	match self {
             Kind::Blank => "_",
@@ -64,8 +73,10 @@ pub enum Player {
     Black
 }
 
+/**
+ * Represents a player in the game (i.e. white or black).
+ */
 impl Player {
-
     /** 
      * Flip to other player.  For example, if this is white then it
      * becomes black, etc.
