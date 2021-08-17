@@ -48,13 +48,11 @@ pub fn from_str(s1:&str) -> Result<Box<dyn Move>,()> {
     let (taken,s5) = parse_piece(s4,false);
     // Parse destiation
     let (to,  s6) = parse_square(s5)?;
-    // Create simple move
-    let parent = SimpleMove{piece,from,to};
     // Create appropriate move
     let m : Box<dyn Move> = if kind {
-	Box::new(SimpleTake{parent,taken})	
+	Box::new(SimpleTake{piece,from,to,taken})	
     } else {
-	Box::new(parent)
+	Box::new(SimpleMove{piece,from,to})
     };
     // Done
     Ok(m)
@@ -115,9 +113,18 @@ fn skip(s:&str,i:usize) -> &str {
  * or "b1-e5".  This is the simplest of all moves in the game.
  */
 pub struct SimpleMove {
+    /**
+     * Piece doing the move
+     */
     piece: Piece,
+    /**
+     * Starting position of piece
+     */
     from: Square,
-    to: Square,
+    /**
+     * Ending position of piece
+     */
+    to: Square
 }
 
 /**
@@ -126,14 +133,23 @@ pub struct SimpleMove {
  */
 impl Move for SimpleMove {
     fn apply(&self, mut board: Board) -> Option<Board> {
+	println!("*** {}",self);	
 	// Read out piece at from position
         let p = board.get(self.from);
-	// Remove piece from board
-	board = board.set(self.from,BLANK);
-	// Put piece at new position
-	board = board.set(self.to,p);
-	// Done
-	return Some(board);
+	// Read out piece at to position (should be blank)
+	let t = board.get(self.to);
+	// Check piece matches what is expected
+	println!("GOT {} == {}",p,self.piece);
+	if p == self.piece && t == BLANK && p.can_move(board,self.from,self.to) {
+	    // Remove piece from board
+	    board = board.set(self.from,BLANK);
+	    // Put piece at new position
+	    board = board.set(self.to,p);
+	    // Done
+	    return Some(board);
+	}
+	// Failure
+	return None;
     }
 }
 
@@ -162,9 +178,21 @@ impl fmt::Display for SimpleMove {
  * such as "Bb1xe5" or "Bb1xQe5".
  */
 pub struct SimpleTake {
-    // Underlying move
-    parent: SimpleMove,
-    // piece being taken (the takee)    
+    /**
+     * Piece doing the take
+     */
+    piece: Piece,
+    /**
+     * Starting position of piece
+     */
+    from: Square,
+    /**
+     * Ending position of piece
+     */
+    to: Square,
+    /**
+     * Piece being taken
+     */
     taken: Piece
 }
 
@@ -174,7 +202,21 @@ pub struct SimpleTake {
  */
 impl Move for SimpleTake {
     fn apply(&self, mut board: Board) -> Option<Board> {
-	return self.parent.apply(board);
+	// Read out piece at from position
+        let p = board.get(self.from);
+	// Read out piece at to position (should be blank)
+	let t = board.get(self.to);
+	// Check piece matches what is expected
+	if p == self.piece && t == self.taken && p.can_move(board,self.from,self.to) {
+	    // Remove piece from board
+	    board = board.set(self.from,BLANK);
+	    // Put piece at new position
+	    board = board.set(self.to,p);
+	    // Done
+	    return Some(board);
+	}
+	// Failure
+	return None;
     }
 }
 
@@ -183,18 +225,18 @@ impl Move for SimpleTake {
  */
 impl fmt::Display for SimpleTake {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-	match (self.parent.piece.kind,self.taken.kind) {
+	match (self.piece.kind,self.taken.kind) {
 	    (Kind::Pawn,Kind::Pawn) => {
-		write!(f,"{}x{}",self.parent.from,self.parent.to)
+		write!(f,"{}x{}",self.from,self.to)
 	    }
 	    (Kind::Pawn,_) => {
-		write!(f,"{}x{}{}",self.parent.from,self.taken,self.parent.to)
+		write!(f,"{}x{}{}",self.from,self.taken,self.to)
 	    }
 	    (_,Kind::Pawn) => {
-		write!(f,"{}{}x{}",self.parent.piece,self.parent.from,self.parent.to)
+		write!(f,"{}{}x{}",self.piece,self.from,self.to)
 	    }	    
 	    _ => {
-		write!(f,"{}{}x{}{}",self.parent.piece,self.parent.from,self.taken,self.parent.to)
+		write!(f,"{}{}x{}{}",self.piece,self.from,self.taken,self.to)
 	    }
 	}        
     }

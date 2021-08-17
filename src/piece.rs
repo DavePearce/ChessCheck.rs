@@ -1,5 +1,7 @@
 use std::fmt;
 use std::str;
+use super::squares::Square;
+use super::board::Board;
 
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub enum Kind {
@@ -27,7 +29,28 @@ impl Piece {
      */
     pub fn to_side(&self, b: bool) -> Piece {
 	return Piece{white: b, kind: self.kind};
-    }    
+    }
+
+    /**
+     * Check whether this piece can move from one position on the
+     * board to another.  There are few aspects to this: firstly, it
+     * has to be a valid move for the piece (e.g. rooks cannot move
+     * along a diagonol); secondly, the move needs to be unobstructed
+     * (at least for some pieces).  Note, however, than the final
+     * position is not considered here.  That is, we are not concerned
+     * whether the final piece is obstructed or not (this is handled
+     * elsewhere).    
+     */
+    pub fn can_move(&self, board: Board, from: Square, to: Square) -> bool {
+	match self.kind {
+	    Pawn => {
+		true
+	    }
+	    _ => {
+		false
+	    }
+	}
+    }
 }
 
 /**
