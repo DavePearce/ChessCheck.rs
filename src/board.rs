@@ -1,9 +1,11 @@
 use std::fmt;
 use super::piece::*;
+use super::squares::*;
 
 /**
  * Define Chess board representation.
  */
+#[derive(Copy, Clone, Debug)]
 pub struct Board {
     squares: [Piece;64]
 }
@@ -23,6 +25,29 @@ pub const INITIAL: Board = Board {
         BLACK_ROOK, BLACK_KNIGHT, BLACK_BISHOP, BLACK_QUEEN, BLACK_KING, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK
     ]
 };
+
+/**
+ * Provide board manipulation methods
+ */
+impl Board {
+    pub fn get(&self, s:Square) -> Piece {
+	// Convert square into linear offset
+	let offset = s.to_offset();
+	// Read out piece at given offset
+	return self.squares[offset];	
+    }
+
+    pub fn set(&self, s:Square, p:Piece) -> Self {
+	// Convert square into linear offset
+	let offset = s.to_offset();	
+	// Copy myself
+	let mut nbrd = *self;
+	// Update copy
+	nbrd.squares[offset] = p;
+	// Done
+	return nbrd;
+    }
+}
 
 /** 
  * Provide textual representation of Board

@@ -15,7 +15,7 @@ pub enum Kind {
 /**
  * Define a given piece on the board
  */
-#[derive(Copy, Clone, PartialEq, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Piece {
     pub white: bool,
     pub kind: Kind,
@@ -66,7 +66,7 @@ pub fn is_char(s: &str) -> bool {
 impl fmt::Display for Piece {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self.kind {
-            Kind::Blank => write!(f, " "),
+            Kind::Blank => write!(f, "_"),
             Kind::Pawn => {
                 if self.white {
                     write!(f, "P")

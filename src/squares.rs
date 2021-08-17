@@ -4,12 +4,20 @@ use std::str;
 /**
  * Represents a give position on the board, such as "a1" or "h5", etc.
  */
-#[derive(Debug,PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Square {
     col: u8, // where 0 <= col <= 7    
     row: u8  // where 0 <= row <= 7
 }
 
+impl Square {
+    /**
+     * Calculate offset into squares array that this square represents.
+     */
+    pub fn to_offset(&self) -> usize {
+	return ((self.row*8) + self.col) as usize;
+    }
+}
 /**
  * Convert a string into a square.
  */
@@ -26,6 +34,9 @@ pub fn from_str(s: &str) -> Result<Square, ()> {
     }
 }
 
+/**
+ * Convert column identifier into integer
+ */
 fn parse_col(s: &str) -> Option<u8> {
     match s {
         "a" => Some(0),
@@ -40,6 +51,9 @@ fn parse_col(s: &str) -> Option<u8> {
     }
 }
 
+/**
+ * Convert row into integer
+ */
 fn parse_row(s: &str) -> Option<u8> {
     // This could be simpler!
     match s {
