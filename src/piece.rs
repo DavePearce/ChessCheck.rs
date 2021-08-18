@@ -1,5 +1,6 @@
 use std::fmt;
 use std::str;
+use std::cmp;
 use super::squares::Square;
 use super::board::Board;
 
@@ -199,15 +200,20 @@ pub fn can_pawn_move(board: Board, player: Player, from: Square, to: Square) -> 
 /**
  * Determine whether a given knight move is valid (or not).
  */
-pub fn can_knight_move(_board: Board, _from: Square, _to: Square) -> bool {
-    false
+pub fn can_knight_move(_board: Board, from: Square, to: Square) -> bool {
+    // Determine absolute difference in column
+    let dcol = abs_diff_column(from,to);
+    // Determine absolute different in row
+    let drow = abs_diff_row(from,to);
+    //
+    (dcol == 1 && drow == 2) || (dcol == 2 && drow == 1)
 }
 
 /**
  * Determine whether a given bishop move is valid (or not).
  */
-pub fn can_bishop_move(_board: Board, _from: Square, _to: Square) -> bool {
-    false
+pub fn can_bishop_move(board: Board, from: Square, to: Square) -> bool {
+    clear_diagonal_inner(board,from,to)
 }
 
 /**
@@ -229,6 +235,55 @@ pub fn can_queen_move(_board: Board, _from: Square, _to: Square) -> bool {
  */
 pub fn can_king_move(_board: Board, _from: Square, _to: Square) -> bool {
     false
+}
+
+/**
+ * Check whether a given diagonol in the board consists of internal
+ * blanks.  That is, all positions are blank *except* the start and
+ * end square.  Furthermore, if the path between the two points is not
+ * a diagonol then return false.
+ */
+fn clear_diagonal_inner(board: Board, from: Square, to: Square) -> bool {
+    let diff_col = abs_diff_column(from,to);
+    let diff_row = abs_diff_row(from,to);
+    // Sanity check is diagonol
+    if diff_col != diff_row || diff_col == 0 {
+	return false;
+    }
+    // This could be improved!
+    let mut col : i8 = from.column() as i8;
+    let mut row : i8 = from.row() as i8;
+    let start_row : i8 = from.row() as i8;	
+    let end_col : i8 = to.column() as i8;
+    let end_row : i8 = to.row() as i8;
+    let col_dir : i8 = if col < end_col { 1 } else { -1 };
+    let row_dir : i8  = if row < end_row { 1 } else { -1 };
+    // Sanity check only blanks on diagonol
+    while row != end_row && col != end_col {
+	if row != start_row && row != end_row {
+	    if board.get(Square::new(col as u8,row as u8)) != BLANK {
+		return false;
+	    }
+	}
+	col = col + col_dir;
+	row = row + row_dir;
+    }
+    // Success!
+    true
+}
+
+/**
+ * Determine absolute different in column between two squares
+ */
+fn abs_diff_column(from: Square, to: Square) -> u8 {
+    cmp::max(from.column(),to.column()) - cmp::min(from.column(),to.column())
+}
+
+/**
+ * Determine absolute different in row between two squares
+ */
+fn abs_diff_row(from: Square, to: Square) -> u8 {
+    cmp::max(from.row(),to.row()) - cmp::min(from.row(),to.row())
 }
 
 

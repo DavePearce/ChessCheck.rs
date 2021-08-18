@@ -29,7 +29,7 @@ pub const INITIAL: Board = Board {
 /**
  * Provide board manipulation methods
  */
-impl Board {
+impl Board {    
     pub fn get(&self, s:Square) -> Piece {
 	// Convert square into linear offset
 	let offset = s.to_offset();
