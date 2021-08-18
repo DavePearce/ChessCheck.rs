@@ -12,6 +12,17 @@ pub struct Square {
 
 impl Square {
     /**
+     * Construct a square on the board.  This must be a valid
+     * position, otherwise panic.
+     */
+    pub fn new(col: u8, row: u8) -> Square {
+	// Sanity check parameters
+	assert!(col < 8);
+	assert!(row < 8);
+	//
+	Square{col,row}
+    }
+    /**
      * Calculate offset into squares array that this square represents.
      */
     pub fn to_offset(&self) -> usize {

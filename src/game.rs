@@ -185,7 +185,7 @@ fn test_pawn_14() {
 #[test]
 fn test_pawn_15() {
     check_invalid("a2-a3 d7-d5\n\
-		   a3-a4 d5-d4\
+		   a3-a4 d5-d4\n\
 		   d2-d4");
 }
 

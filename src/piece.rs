@@ -122,7 +122,7 @@ impl Piece {
      */
     pub fn can_move(&self, board: Board, from: Square, to: Square) -> bool {
 	match self.kind {
-	    Pawn => can_pawn_move(board,self.player,from,to,None),
+	    Pawn => can_pawn_move(board,self.player,from,to),
 	    Knight => can_knight_move(board,from,to),
 	    Bishop => can_bishop_move(board,from,to),
 	    Rook => can_rook_move(board,from,to),
@@ -175,22 +175,33 @@ pub fn is_char(s: &str) -> bool {
 /**
  * Determine whether a given pawn move is valid (or not).
  */
-pub fn can_pawn_move(board: Board, player: Player, from: Square, to: Square, taken: Option<Piece>) -> bool {
+pub fn can_pawn_move(board: Board, player: Player, from: Square, to: Square) -> bool {
     // Get direction of movement for given player
     let dir : i8 = match player { Player::White => 1, Player::Black => -1 };
     let oldRow = from.row() as i8;
     let oldCol = from.column() as i8;
     let newRow = to.row() as i8;
     let newCol = to.column() as i8;
+    let target = board.get(to);
     //
     if (oldRow+dir) == newRow {
 	// Case where pawn advances one row
 	if oldCol == newCol {
 	    // Simple move, not take
-	    return taken.is_none();
+	    return target == BLANK;
 	} else if (oldCol-1) == newCol || (oldCol+1) == newCol {
 	    // Take move
-	    return taken.is_some();
+	    return target != BLANK;
+	}
+    } else if (oldRow+dir+dir) == newRow && (oldCol == newCol) {
+	// Case where pawn advances two rows.  For this to be
+	// permited, pawn must be on starting row.
+	if (dir == 1 && oldRow == 1) || (dir == -1 && oldRow == 6) {
+	    // Furthermore, cannot be anything in the way.  So,
+	    // compute the square inbetween.
+	    let gap = Square::new(from.column(), (oldRow+dir) as u8);
+	    // Check nothing is in the way!
+	    return board.get(gap) == BLANK && target == BLANK;
 	}
     }
     // Fail
