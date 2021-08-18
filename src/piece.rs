@@ -260,13 +260,12 @@ fn clear_diagonal_inner(board: Board, from: Square, to: Square) -> bool {
     let row_dir : i8  = if row < end_row { 1 } else { -1 };
     // Sanity check only blanks on diagonol
     while row != end_row && col != end_col {
-	if row != start_row && row != end_row {
-	    if board.get(Square::new(col as u8,row as u8)) != BLANK {
-		return false;
-	    }
+	if row != start_row && row != end_row
+	    && board.get(Square::new(col as u8,row as u8)) != BLANK {
+	    return false;
 	}
-	col = col + col_dir;
-	row = row + row_dir;
+	col += col_dir;
+	row += row_dir;
     }
     // Success!
     true
