@@ -17,6 +17,22 @@ impl Square {
     pub fn to_offset(&self) -> usize {
 	return ((self.row*8) + self.col) as usize;
     }
+
+    /**
+     * Get column number of this square, which is between 0 and 7
+     * (inclusive).
+     */
+    pub fn column(&self) -> u8 {
+	self.col
+    }
+
+    /**
+     * Get row number of this square, which is between 0 and 7
+     * (inclusive).
+     */
+    pub fn row(&self) -> u8 {
+	self.row
+    }    
 }
 /**
  * Convert a string into a square.

@@ -246,6 +246,8 @@ fn check_valid(game: &str, expected: &str) {
     // Apply each move to initial board producing a potentially
     // updated board.    
     let obrd = g.apply(INITIAL);
+    // Print game
+    println!("Game:\n{}\n",game);
     // Print expected board
     println!("Expected:\n{}\n",expected);
     //

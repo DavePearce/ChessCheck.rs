@@ -122,12 +122,12 @@ impl Piece {
      */
     pub fn can_move(&self, board: Board, from: Square, to: Square) -> bool {
 	match self.kind {
-	    Pawn => {
-		true
-	    }
-	    _ => {
-		false
-	    }
+	    Pawn => can_pawn_move(board,self.player,from,to,None),
+	    Knight => can_knight_move(board,from,to),
+	    Bishop => can_bishop_move(board,from,to),
+	    Rook => can_rook_move(board,from,to),
+	    Queen => can_queen_move(board,from,to),
+	    King => can_king_move(board,from,to)
 	}
     }
     
@@ -171,6 +171,67 @@ pub fn is_char(s: &str) -> bool {
         _ => false
     }    
 }
+
+/**
+ * Determine whether a given pawn move is valid (or not).
+ */
+pub fn can_pawn_move(board: Board, player: Player, from: Square, to: Square, taken: Option<Piece>) -> bool {
+    // Get direction of movement for given player
+    let dir : i8 = match player { Player::White => 1, Player::Black => -1 };
+    let oldRow = from.row() as i8;
+    let oldCol = from.column() as i8;
+    let newRow = to.row() as i8;
+    let newCol = to.column() as i8;
+    //
+    if (oldRow+dir) == newRow {
+	// Case where pawn advances one row
+	if oldCol == newCol {
+	    // Simple move, not take
+	    return taken.is_none();
+	} else if (oldCol-1) == newCol || (oldCol+1) == newCol {
+	    // Take move
+	    return taken.is_some();
+	}
+    }
+    // Fail
+    false
+}
+
+/**
+ * Determine whether a given knight move is valid (or not).
+ */
+pub fn can_knight_move(board: Board, from: Square, to: Square) -> bool {
+    false
+}
+
+/**
+ * Determine whether a given bishop move is valid (or not).
+ */
+pub fn can_bishop_move(board: Board, from: Square, to: Square) -> bool {
+    false
+}
+
+/**
+ * Determine whether a given rook move is valid (or not).
+ */
+pub fn can_rook_move(board: Board, from: Square, to: Square) -> bool {
+    false
+}
+
+/**
+ * Determine whether a given queen move is valid (or not).
+ */
+pub fn can_queen_move(board: Board, from: Square, to: Square) -> bool {
+    false
+}
+
+/**
+ * Determine whether a given king move is valid (or not).
+ */
+pub fn can_king_move(board: Board, from: Square, to: Square) -> bool {
+    false
+}
+
 
 /**
  * Provide textual representation of pieces, where white's pieces are

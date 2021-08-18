@@ -135,7 +135,6 @@ pub struct SimpleMove {
  */
 impl Move for SimpleMove {
     fn apply(&self, mut board: Board) -> Option<Board> {
-	println!("*** {}",self);	
 	// Read out piece at from position
         let p = board.get(self.from);
 	// Read out piece at to position (should be blank)
