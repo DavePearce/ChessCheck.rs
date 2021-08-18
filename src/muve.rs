@@ -1,10 +1,11 @@
+use std::fmt;
+use std::str;
+
 use super::board::*;
 use super::piece;
 use super::piece::*;
-use super::squares;
-use super::squares::Square;
-use std::fmt;
-use std::str;
+use super::square;
+use super::square::Square;
 
 /**
  * Represents a given move in the game, which could be moving a piece,
@@ -70,7 +71,7 @@ fn parse_piece(mut s:&str, p:Player) -> (Piece,&str) {
  */
 fn parse_square(s:&str) -> Result<(Square,&str),()> {
     // Parse square
-    let sq = squares::from_str(&s[0..2])?;
+    let sq = square::from_str(&s[0..2])?;
     // Done
     Ok((sq,skip(s,2)))
 }

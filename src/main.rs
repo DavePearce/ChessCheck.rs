@@ -6,7 +6,7 @@
 mod piece;
 mod board;
 mod muve;
-mod squares;
+mod square;
 mod game;
 
 use std::env;

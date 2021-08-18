@@ -1,7 +1,7 @@
 use std::fmt;
 use std::str;
 use std::cmp;
-use super::squares::Square;
+use super::square::Square;
 use super::board::Board;
 
 // ==========================================================================

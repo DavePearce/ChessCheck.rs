@@ -1,6 +1,6 @@
 use std::fmt;
 use super::piece::*;
-use super::squares::*;
+use super::square::*;
 
 /**
  * Define Chess board representation.

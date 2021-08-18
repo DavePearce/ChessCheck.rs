@@ -1,13 +1,15 @@
-use super::muve;
-use super::muve::Move;
-use super::piece::Player;
-use super::board::*;
 use std::str::FromStr;
 use std::fmt;
 use std::str;
 
+use super::muve;
+use super::muve::Move;
+use super::piece::Player;
+use super::board::*;
+
 pub struct Game {
-    // Sequence of moves beggining with White's and alternating between White and Black.
+    // Sequence of moves begginning with White's and alternating
+    // between White and Black.
     moves: Vec<Box<dyn Move>>,
 }
 
