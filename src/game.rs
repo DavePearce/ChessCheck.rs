@@ -41,11 +41,17 @@ impl Game {
      * representing the state of the game after all the moves have
      * been applied.
      */
-    pub fn apply(&self, mut board: Board) -> Option<Board> {
+    pub fn apply(&self, mut board: Board) -> Result<Board,Board> {
 	for m in &self.moves {
-	    board = m.apply(board)?;
+	    let b = m.apply(board);
+	    // Sanity check
+	    if b.is_none() {
+		return Err(board);
+	    } else {
+		board = b.unwrap();
+	    }
 	}
-	return Some(board);
+	return Ok(board);
     }
 }
 
@@ -250,15 +256,17 @@ fn check_valid(game: &str, expected: &str) {
     println!("Game:\n{}\n",game);
     // Print expected board
     println!("Expected:\n{}\n",expected);
-    //
-    if obrd.is_some() {
-	// Print actual board
+    // Print actual board    
+    if obrd.is_err() {
+	println!("Actual:\n{}",obrd.err().unwrap().to_string());
+	assert!(false);
+    } else {
 	println!("Actual:\n{}",obrd.unwrap().to_string());
+	// Attempt to unwrap the board
+	let brd = obrd.unwrap().to_string();
+	// Check whether they match
+	assert!(brd == expected);	
     }
-    // Attempt to unwrap the board
-    let brd = obrd.unwrap().to_string();
-    // Check whether they match
-    assert_eq!(brd,expected);   
 }
 
 /**
@@ -272,5 +280,5 @@ fn check_invalid(game: &str) {
     // updated board.    
     let obrd = g.apply(INITIAL);
     // Expect this to have failed
-    assert!(obrd.is_none());    
+    assert!(obrd.is_err());
 }
