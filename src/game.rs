@@ -736,7 +736,271 @@ fn test_bishop_13() {
 		   Bc1-d2 Bc5xf2");
 }
 
+// ======================================================
+// Rooks
+// ======================================================
 
+#[test]
+fn test_rook_01() {
+    check_valid("a2-a4 a7-a5\n\
+		 Ra1-a3",
+		//
+		"8|r|n|b|q|k|b|n|r|\n\
+		 7|_|p|p|p|p|p|p|p|\n\
+		 6|_|_|_|_|_|_|_|_|\n\
+		 5|p|_|_|_|_|_|_|_|\n\
+		 4|P|_|_|_|_|_|_|_|\n\
+		 3|R|_|_|_|_|_|_|_|\n\
+		 2|_|P|P|P|P|P|P|P|\n\
+		 1|_|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");
+}
+
+#[test]
+fn test_rook_02() {
+    check_valid("a2-a4 a7-a5\n\
+		 Ra1-a3 Ra8-a6",
+		//
+		"8|_|n|b|q|k|b|n|r|\n\
+		 7|_|p|p|p|p|p|p|p|\n\
+		 6|r|_|_|_|_|_|_|_|\n\
+		 5|p|_|_|_|_|_|_|_|\n\
+		 4|P|_|_|_|_|_|_|_|\n\
+		 3|R|_|_|_|_|_|_|_|\n\
+		 2|_|P|P|P|P|P|P|P|\n\
+		 1|_|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");
+}
+
+#[test]
+fn test_rook_03() {
+    check_valid("a2-a4 a7-a5\n\
+		 Ra1-a3 Ra8-a6\n\
+		 Ra3-h3 Ra6-e6",
+		//
+		"8|_|n|b|q|k|b|n|r|\n\
+		 7|_|p|p|p|p|p|p|p|\n\
+		 6|_|_|_|_|r|_|_|_|\n\
+		 5|p|_|_|_|_|_|_|_|\n\
+		 4|P|_|_|_|_|_|_|_|\n\
+		 3|_|_|_|_|_|_|_|R|\n\
+		 2|_|P|P|P|P|P|P|P|\n\
+		 1|_|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");
+}
+
+#[test]
+fn test_rook_04() {
+    check_valid("h2-h4 h7-h5\n\
+		 Rh1-h3 Rh8-h6\n\
+		 Rh3-a3 Rh6-e6",
+		//
+		"8|r|n|b|q|k|b|n|_|\n\
+		 7|p|p|p|p|p|p|p|_|\n\
+		 6|_|_|_|_|r|_|_|_|\n\
+		 5|_|_|_|_|_|_|_|p|\n\
+		 4|_|_|_|_|_|_|_|P|\n\
+		 3|R|_|_|_|_|_|_|_|\n\
+		 2|P|P|P|P|P|P|P|_|\n\
+		 1|R|N|B|Q|K|B|N|_|\n\
+		 -|a b c d e f g h");
+}
+
+#[test]
+fn test_rook_05() {
+    check_valid("a2-a4 a7-a5\n\
+		 Ra1-a3 Ra8-a6\n\
+		 Ra3-h3 Ra6-e6\n\
+		 Rh3xh7",
+		//
+		"8|_|n|b|q|k|b|n|r|\n\
+		 7|_|p|p|p|p|p|p|R|\n\
+		 6|_|_|_|_|r|_|_|_|\n\
+		 5|p|_|_|_|_|_|_|_|\n\
+		 4|P|_|_|_|_|_|_|_|\n\
+		 3|_|_|_|_|_|_|_|_|\n\
+		 2|_|P|P|P|P|P|P|P|\n\
+		 1|_|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");
+}
+
+#[test]
+fn test_rook_06() {
+    check_valid("a2-a4 a7-a5\n\
+		 Ra1-a3 Ra8-a6\n\
+		 Ra3-h3 Ra6-d6\n\
+		 Rh3xh7 Rd6xd2",
+		//
+		"8|_|n|b|q|k|b|n|r|\n\
+		 7|_|p|p|p|p|p|p|R|\n\
+		 6|_|_|_|_|_|_|_|_|\n\
+		 5|p|_|_|_|_|_|_|_|\n\
+		 4|P|_|_|_|_|_|_|_|\n\
+		 3|_|_|_|_|_|_|_|_|\n\
+		 2|_|P|P|r|P|P|P|P|\n\
+		 1|_|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");
+}
+
+#[test]
+fn test_rook_07() {
+    check_valid("h2-h4 h7-h5\n\
+		 Rh1-h3 Rh8-h6\n\
+		 Rh3-a3 Rh6-f6\n\
+		 Ra3xa7",
+		//
+		"8|r|n|b|q|k|b|n|_|\n\
+		 7|R|p|p|p|p|p|p|_|\n\
+		 6|_|_|_|_|_|r|_|_|\n\
+		 5|_|_|_|_|_|_|_|p|\n\
+		 4|_|_|_|_|_|_|_|P|\n\
+		 3|_|_|_|_|_|_|_|_|\n\
+		 2|P|P|P|P|P|P|P|_|\n\
+		 1|R|N|B|Q|K|B|N|_|\n\
+		 -|a b c d e f g h");
+}
+
+#[test]
+fn test_rook_08() {
+    check_valid("h2-h4 h7-h5\n\
+		 Rh1-h3 Rh8-h6\n\
+		 Rh3-a3 Rh6-f6\n\
+		 Ra3xa7 Rf6xf2",
+		//
+		"8|r|n|b|q|k|b|n|_|\n\
+		 7|R|p|p|p|p|p|p|_|\n\
+		 6|_|_|_|_|_|_|_|_|\n\
+		 5|_|_|_|_|_|_|_|p|\n\
+		 4|_|_|_|_|_|_|_|P|\n\
+		 3|_|_|_|_|_|_|_|_|\n\
+		 2|P|P|P|P|P|r|P|_|\n\
+		 1|R|N|B|Q|K|B|N|_|\n\
+		 -|a b c d e f g h");
+}
+
+#[test]
+fn test_rook_09() {
+    check_valid("a2-a4 h7-h5\n\
+		 Ra1-a3\n",
+		//
+		"8|r|n|b|q|k|b|n|r|\n\
+		 7|p|p|p|p|p|p|p|_|\n\
+		 6|_|_|_|_|_|_|_|_|\n\
+		 5|_|_|_|_|_|_|_|p|\n\
+		 4|P|_|_|_|_|_|_|_|\n\
+		 3|R|_|_|_|_|_|_|_|\n\
+		 2|_|P|P|P|P|P|P|P|\n\
+		 1|_|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");
+}
+
+#[test]
+fn test_rook_10() {
+    check_valid("a2-a4 h7-h5\n\
+		 Ra1-a3 Rh8-h6",
+		//
+		"8|r|n|b|q|k|b|n|_|\n\
+		 7|p|p|p|p|p|p|p|_|\n\
+		 6|_|_|_|_|_|_|_|r|\n\
+		 5|_|_|_|_|_|_|_|p|\n\
+		 4|P|_|_|_|_|_|_|_|\n\
+		 3|R|_|_|_|_|_|_|_|\n\
+		 2|_|P|P|P|P|P|P|P|\n\
+		 1|_|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");
+}
+
+#[test]
+fn test_rook_11() {
+    check_valid("a2-a4 h7-h5\n\
+		 Ra1-a3 Rh8-h6\nRa3-e3\n",
+		//
+		"8|r|n|b|q|k|b|n|_|\n\
+		 7|p|p|p|p|p|p|p|_|\n\
+		 6|_|_|_|_|_|_|_|r|\n\
+		 5|_|_|_|_|_|_|_|p|\n\
+		 4|P|_|_|_|_|_|_|_|\n\
+		 3|_|_|_|_|R|_|_|_|\n\
+		 2|_|P|P|P|P|P|P|P|\n\
+		 1|_|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");
+}
+
+#[test]
+fn test_rook_12() {
+    check_valid("a2-a4 h7-h5\n\
+		 Ra1-a3 Rh8-h6\n\
+		 Ra3-d3 Rh6-g6\n\
+		 Rd3xd7\n",
+		//
+		"8|r|n|b|q|k|b|n|_|\n\
+		 7|p|p|p|R|p|p|p|_|\n\
+		 6|_|_|_|_|_|_|r|_|\n\
+		 5|_|_|_|_|_|_|_|p|\n\
+		 4|P|_|_|_|_|_|_|_|\n\
+		 3|_|_|_|_|_|_|_|_|\n\
+		 2|_|P|P|P|P|P|P|P|\n\
+		 1|_|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");
+}
+
+#[test]
+fn test_rook_13() {
+    check_valid("a2-a4 h7-h5\n\
+		 Ra1-a3 Rh8-h6\n\
+		 Ra3-d3 Rh6-g6\n\
+		 Rd3xd7 Ke8xRd7\n",
+		//
+		"8|r|n|b|q|_|b|n|_|\n\
+		 7|p|p|p|k|p|p|p|_|\n\
+		 6|_|_|_|_|_|_|r|_|\n\
+		 5|_|_|_|_|_|_|_|p|\n\
+		 4|P|_|_|_|_|_|_|_|\n\
+		 3|_|_|_|_|_|_|_|_|\n\
+		 2|_|P|P|P|P|P|P|P|\n\
+		 1|_|N|B|Q|K|B|N|R|\n\
+		 -|a b c d e f g h");
+}
+
+#[test]
+fn test_rook_14() {
+    check_invalid("Ra1-a4");
+}
+
+#[test]
+fn test_rook_15() {
+    check_invalid("a2-a4 d7-d5\n\
+ 		   Ra1-a3 e7-e5\n\
+ 		   Ra3-b4");
+}
+
+#[test]
+fn test_rook_16() {
+    check_invalid("a2-a4 d7-d5\n\
+		   Ra1-a3 e7-e5\n\
+		   Ra3-e3 h7-h6\n\
+		   Re3-e6"
+    );
+}
+
+#[test]
+fn test_rook_17() {
+    check_invalid("a2-a4 d7-d5\n\
+		   Ra1-a3 e7-e5\n\
+		   Ra3-e3 h7-h6\n\
+		   Re3xe6"
+    );
+}
+
+#[test]
+fn test_rook_18() {
+    check_invalid("a2-a4 d7-d5\n\
+		   Ra1-a3 e7-e6\n\
+		   Ra3-d3 h7-h6\n\
+		   Rd3xd5 a7-a6\n\
+		   Rd5xe6" 
+    );
+}
 
 // ======================================================
 // Helpers
