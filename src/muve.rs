@@ -19,21 +19,6 @@ pub trait Move : fmt::Display {
 }
 
 /**
- * Apply a sequence of zero more moves to a given board, producing a
- * potentially updated board.  If one of the moves is invalid, then
- * nothing is returned.
- */
-pub fn apply(moves: Vec<&str>, mut board: Board) -> Option<Board> {
-    for s in moves {
-	// Parse move
-	let m = from_str(s,Player::White).unwrap();
-	// Apply move 
-	board = m.apply(board)?;
-    }
-    return Some(board);
-}
-
-/**
  * Parse a given string into a Move.  If the string is invalid, then
  * an error is returned.
  */
@@ -47,7 +32,7 @@ pub fn from_str(s1:&str, p:Player) -> Result<Box<dyn Move>,()> {
     // Parse piece (if exists)
     let (taken,s5) = parse_piece(s4,p.flip());
     // Parse destiation
-    let (to,  s6) = parse_square(s5)?;
+    let (to,  _s6) = parse_square(s5)?;
     // Create appropriate move
     let m : Box<dyn Move> = if kind {
 	Box::new(SimpleTake{piece,from,to,taken})	
@@ -63,7 +48,7 @@ pub fn from_str(s1:&str, p:Player) -> Result<Box<dyn Move>,()> {
  * valid character piece exists, then assume its a pawn.
  */
 fn parse_piece(mut s:&str, p:Player) -> (Piece,&str) {
-    let mut r : Piece;
+    let r : Piece;
     // Parse piece (if exists)       
     if piece::is_char(&s[0..1]) {
 	// Piece given

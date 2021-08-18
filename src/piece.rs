@@ -104,13 +104,6 @@ pub struct Piece {
 
 impl Piece {
     /**
-     * Set the side for a given piece (i.e. white or black).
-     */
-    pub fn to_side(&self, p:Player) -> Piece {
-	return Piece{player: p, kind: self.kind};
-    }
-
-    /**
      * Check whether this piece can move from one position on the
      * board to another.  There are few aspects to this: firstly, it
      * has to be a valid move for the piece (e.g. rooks cannot move
@@ -122,12 +115,13 @@ impl Piece {
      */
     pub fn can_move(&self, board: Board, from: Square, to: Square) -> bool {
 	match self.kind {
-	    Pawn => can_pawn_move(board,self.player,from,to),
-	    Knight => can_knight_move(board,from,to),
-	    Bishop => can_bishop_move(board,from,to),
-	    Rook => can_rook_move(board,from,to),
-	    Queen => can_queen_move(board,from,to),
-	    King => can_king_move(board,from,to)
+	    Kind::Blank => false,
+	    Kind::Pawn => can_pawn_move(board,self.player,from,to),
+	    Kind::Knight => can_knight_move(board,from,to),
+	    Kind::Bishop => can_bishop_move(board,from,to),
+	    Kind::Rook => can_rook_move(board,from,to),
+	    Kind::Queen => can_queen_move(board,from,to),
+	    Kind::King => can_king_move(board,from,to)		
 	}
     }
     
@@ -178,28 +172,28 @@ pub fn is_char(s: &str) -> bool {
 pub fn can_pawn_move(board: Board, player: Player, from: Square, to: Square) -> bool {
     // Get direction of movement for given player
     let dir : i8 = match player { Player::White => 1, Player::Black => -1 };
-    let oldRow = from.row() as i8;
-    let oldCol = from.column() as i8;
-    let newRow = to.row() as i8;
-    let newCol = to.column() as i8;
+    let old_row = from.row() as i8;
+    let old_col = from.column() as i8;
+    let new_row = to.row() as i8;
+    let new_col = to.column() as i8;
     let target = board.get(to);
     //
-    if (oldRow+dir) == newRow {
+    if (old_row+dir) == new_row {
 	// Case where pawn advances one row
-	if oldCol == newCol {
+	if old_col == new_col {
 	    // Simple move, not take
 	    return target == BLANK;
-	} else if (oldCol-1) == newCol || (oldCol+1) == newCol {
+	} else if (old_col-1) == new_col || (old_col+1) == new_col {
 	    // Take move
 	    return target != BLANK;
 	}
-    } else if (oldRow+dir+dir) == newRow && (oldCol == newCol) {
+    } else if (old_row+dir+dir) == new_row && (old_col == new_col) {
 	// Case where pawn advances two rows.  For this to be
 	// permited, pawn must be on starting row.
-	if (dir == 1 && oldRow == 1) || (dir == -1 && oldRow == 6) {
+	if (dir == 1 && old_row == 1) || (dir == -1 && old_row == 6) {
 	    // Furthermore, cannot be anything in the way.  So,
 	    // compute the square inbetween.
-	    let gap = Square::new(from.column(), (oldRow+dir) as u8);
+	    let gap = Square::new(from.column(), (old_row+dir) as u8);
 	    // Check nothing is in the way!
 	    return board.get(gap) == BLANK && target == BLANK;
 	}
@@ -211,35 +205,35 @@ pub fn can_pawn_move(board: Board, player: Player, from: Square, to: Square) -> 
 /**
  * Determine whether a given knight move is valid (or not).
  */
-pub fn can_knight_move(board: Board, from: Square, to: Square) -> bool {
+pub fn can_knight_move(_board: Board, _from: Square, _to: Square) -> bool {
     false
 }
 
 /**
  * Determine whether a given bishop move is valid (or not).
  */
-pub fn can_bishop_move(board: Board, from: Square, to: Square) -> bool {
+pub fn can_bishop_move(_board: Board, _from: Square, _to: Square) -> bool {
     false
 }
 
 /**
  * Determine whether a given rook move is valid (or not).
  */
-pub fn can_rook_move(board: Board, from: Square, to: Square) -> bool {
+pub fn can_rook_move(_board: Board, _from: Square, _to: Square) -> bool {
     false
 }
 
 /**
  * Determine whether a given queen move is valid (or not).
  */
-pub fn can_queen_move(board: Board, from: Square, to: Square) -> bool {
+pub fn can_queen_move(_board: Board, _from: Square, _to: Square) -> bool {
     false
 }
 
 /**
  * Determine whether a given king move is valid (or not).
  */
-pub fn can_king_move(board: Board, from: Square, to: Square) -> bool {
+pub fn can_king_move(_board: Board, _from: Square, _to: Square) -> bool {
     false
 }
 

@@ -64,7 +64,6 @@ impl fmt::Display for Board {
             writeln!(f,"|")?;            
         }
         // write bottome line
-        let c = 'a';
         write!(f,"-|a b c d e f g h")?;
         Ok(())
     }
