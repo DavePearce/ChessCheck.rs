@@ -25,8 +25,8 @@ impl Square {
     /**
      * Calculate offset into squares array that this square represents.
      */
-    pub fn to_offset(&self) -> usize {
-	return ((self.row*8) + self.col) as usize;
+    pub fn to_offset(self) -> usize {
+	((self.row*8) + self.col) as usize
     }
 
     /**

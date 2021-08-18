@@ -134,7 +134,7 @@ impl Move for SimpleMove {
 	    return Some(board);
 	}
 	// Failure
-	return None;
+	None
     }
 }
 
@@ -201,7 +201,7 @@ impl Move for SimpleTake {
 	    return Some(board);
 	}
 	// Failure
-	return None;
+	None
     }
 }
 

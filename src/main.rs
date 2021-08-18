@@ -9,12 +9,25 @@ mod muve;
 mod squares;
 mod game;
 
-//use self::moves;
+use std::env;
+use std::fs;
 
 fn main() {
-    let v : Vec<&str> = "  x y".split_ascii_whitespace().collect();
-    //
-    for s in v {
-	println!("GOT {}",s);
-    }
+    // Extract command-line arguments
+    let args: Vec<String> = env::args().collect();
+    // Determine game filename
+    let filename = &args[1];
+    println!("Reading file {}", filename);
+    // Read the game file!
+    let contents = fs::read_to_string(filename)
+        .expect("error reading game file");
+    // Parse game string
+    let g = game::from_str(&contents).unwrap();
+    // Apply each move to initial board producing a potentially
+    // updated board.    
+    let brd = g.apply(board::INITIAL).unwrap();
+    // Print game
+    println!("Game:\n{}\n",g);
+    // Print actual board
+    println!("Actual:\n{}",brd.to_string());
 }

@@ -41,17 +41,18 @@ impl Game {
      * representing the state of the game after all the moves have
      * been applied.
      */
+    #[allow(dead_code)]
     pub fn apply(&self, mut board: Board) -> Result<Board,Board> {
 	for m in &self.moves {
 	    let b = m.apply(board);
 	    // Sanity check
-	    if b.is_none() {
-		return Err(board);
+	    if let Some(brd) = b {
+		board = brd;
 	    } else {
-		board = b.unwrap();
-	    }
+		return Err(board);
+	    } 
 	}
-	return Ok(board);
+	Ok(board)
     }
 }
 
@@ -246,6 +247,7 @@ fn test_knight_01() {
  * Check that a given game (i.e. sequence of moves) produce an
  * expected board when applied to the initial board.
  */
+#[cfg(test)]
 fn check_valid(game: &str, expected: &str) {
     // Parse game string
     let g = from_str(game).unwrap();
@@ -256,23 +258,22 @@ fn check_valid(game: &str, expected: &str) {
     println!("Game:\n{}\n",game);
     // Print expected board
     println!("Expected:\n{}\n",expected);
-    // Print actual board    
-    if obrd.is_err() {
-	println!("Actual:\n{}",obrd.err().unwrap().to_string());
-	assert!(false);
-    } else {
-	println!("Actual:\n{}",obrd.unwrap().to_string());
-	// Attempt to unwrap the board
-	let brd = obrd.unwrap().to_string();
-	// Check whether they match
-	assert!(brd == expected);	
-    }
+    // Extract actual board
+    let brd = match obrd {
+	Ok(b) => b,
+	Err(b) => b
+    };
+    // Print actual board
+    println!("Actual:\n{}",brd.to_string());
+    // Check whether they match
+    assert!(brd.to_string() == expected);       
 }
 
 /**
  * Check that a given game (i.e. sequence of moves) produce an error
  * when applied to the initial board.
  */
+#[cfg(test)]
 fn check_invalid(game: &str) {
     // Parse game string
     let g = from_str(game).unwrap();

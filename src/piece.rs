@@ -25,7 +25,7 @@ impl Kind {
     /**
      * Convert a piece kind to a string for a given player.
      */
-    pub fn to_string(&self,p:Player) -> &str {
+    pub fn to_string(self,p:Player) -> &'static str {
 	match p {
 	    Player::White => self.to_white_string(),
 	    Player::Black => self.to_black_string()		
@@ -35,7 +35,7 @@ impl Kind {
     /**
      * Convert a piece kind to a string for the white player.
      */    
-    pub fn to_white_string(&self) -> &str {
+    pub fn to_white_string(self) -> &'static str {
 	match self {
             Kind::Blank => "_",
             Kind::Pawn => "P",
@@ -50,7 +50,7 @@ impl Kind {
     /**
      * Convert a piece kind to a string for the black player.
      */    
-    pub fn to_black_string(&self) -> &str {
+    pub fn to_black_string(self) -> &'static str {
 	match self {
             Kind::Blank => "_",
             Kind::Pawn => "p",
@@ -129,6 +129,7 @@ impl Piece {
      * Flip to other player.  For example, if this is white then it
      * becomes black, etc.
      */
+    #[allow(dead_code)]
     pub fn flip(&self) -> Piece {
 	Piece{player: self.player.flip(), kind: self.kind}
     }
@@ -156,14 +157,7 @@ pub fn from_str(s: &str, p:Player) -> Result<Piece, ()> {
  * of piece.
  */
 pub fn is_char(s: &str) -> bool {
-    match s {
-        "N" => true,
-        "B" => true,
-        "R" => true,
-        "Q" => true,
-        "K" => true,
-        _ => false
-    }    
+    matches!(s,"N" | "B" | "R" | "Q" | "K")
 }
 
 /**

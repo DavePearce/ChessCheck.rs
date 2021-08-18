@@ -34,7 +34,7 @@ impl Board {
 	// Convert square into linear offset
 	let offset = s.to_offset();
 	// Read out piece at given offset
-	return self.squares[offset];	
+	self.squares[offset]
     }
 
     pub fn set(&self, s:Square, p:Piece) -> Self {
@@ -45,7 +45,7 @@ impl Board {
 	// Update copy
 	nbrd.squares[offset] = p;
 	// Done
-	return nbrd;
+	nbrd
     }
 }
 
