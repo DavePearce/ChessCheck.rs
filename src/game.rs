@@ -2,6 +2,7 @@ use super::muve;
 use super::muve::Move;
 use super::piece::Player;
 use super::board::*;
+use std::str::FromStr;
 use std::fmt;
 use std::str;
 
@@ -10,29 +11,33 @@ pub struct Game {
     moves: Vec<Box<dyn Move>>,
 }
 
-pub fn from_str(s: &str) -> Result<Game,()> {
-    let mut ms = Vec::<Box<dyn Move>>::new();
-    // Read line-by-line
-    for l in s.lines() {
-        // Split moves
-        let v: Vec<&str> = l.split_ascii_whitespace().collect();
-        //
-        match v.len() {
-            1 => {
-                // Append white's move
-                ms.push(muve::from_str(v[0],Player::White)?);
+impl FromStr for Game {
+    type Err = (); // for now
+    
+    fn from_str(s: &str) -> Result<Self,Self::Err> {
+	let mut ms = Vec::<Box<dyn Move>>::new();
+	// Read line-by-line
+	for l in s.lines() {
+            // Split moves
+            let v: Vec<&str> = l.split_ascii_whitespace().collect();
+            //
+            match v.len() {
+		1 => {
+                    // Append white's move
+                    ms.push(muve::from_str(v[0],Player::White)?);
+		}
+		2 => {
+                    // Append white's move
+                    ms.push(muve::from_str(v[0],Player::White)?);
+                    // Append black's move
+                    ms.push(muve::from_str(v[1],Player::Black)?);
+		}
+		_ => return Err(()),
             }
-            2 => {
-                // Append white's move
-                ms.push(muve::from_str(v[0],Player::White)?);
-                // Append black's move
-                ms.push(muve::from_str(v[1],Player::Black)?);
-            }
-            _ => return Err(()),
-        }
+	}
+	// Dummy for now
+	Ok(Game { moves: ms })
     }
-    // Dummy for now
-    Ok(Game { moves: ms })
 }
 
 impl Game {
@@ -742,7 +747,7 @@ fn test_bishop_13() {
 #[cfg(test)]
 fn check_valid(game: &str, expected: &str) {
     // Parse game string
-    let g = from_str(game).unwrap();
+    let g = Game::from_str(game).unwrap();
     // Apply each move to initial board producing a potentially
     // updated board.    
     let obrd = g.apply(INITIAL);
@@ -768,7 +773,7 @@ fn check_valid(game: &str, expected: &str) {
 #[cfg(test)]
 fn check_invalid(game: &str) {
     // Parse game string
-    let g = from_str(game).unwrap();
+    let g = Game::from_str(game).unwrap();
     // Apply each move to initial board producing a potentially
     // updated board.    
     let obrd = g.apply(INITIAL);

@@ -11,6 +11,8 @@ mod game;
 
 use std::env;
 use std::fs;
+use std::str::FromStr;
+use game::Game;
 
 fn main() {
     // Extract command-line arguments
@@ -22,7 +24,7 @@ fn main() {
     let contents = fs::read_to_string(filename)
         .expect("error reading game file");
     // Parse game string
-    let g = game::from_str(&contents).unwrap();
+    let g = Game::from_str(&contents).unwrap();
     // Apply each move to initial board producing a potentially
     // updated board.    
     let brd = g.apply(board::INITIAL).unwrap();
