@@ -108,7 +108,7 @@ impl Piece {
      * Check whether this piece can move from one position on the
      * board to another.  There are few aspects to this: firstly, it
      * has to be a valid move for the piece (e.g. rooks cannot move
-     * along a diagonol); secondly, the move needs to be unobstructed
+     * along a diagonal); secondly, the move needs to be unobstructed
      * (at least for some pieces).  Note, however, than the final
      * position is not considered here.  That is, we are not concerned
      * whether the final piece is obstructed or not (this is handled
@@ -219,51 +219,87 @@ pub fn can_bishop_move(board: Board, from: Square, to: Square) -> bool {
 /**
  * Determine whether a given rook move is valid (or not).
  */
-pub fn can_rook_move(_board: Board, _from: Square, _to: Square) -> bool {
-    false
+pub fn can_rook_move(board: Board, from: Square, to: Square) -> bool {
+    clear_straight_inner(board,from,to)
 }
 
 /**
  * Determine whether a given queen move is valid (or not).
  */
-pub fn can_queen_move(_board: Board, _from: Square, _to: Square) -> bool {
-    false
+pub fn can_queen_move(board: Board, from: Square, to: Square) -> bool {
+    clear_diagonal_inner(board,from,to) || clear_straight_inner(board,from,to)
 }
 
 /**
  * Determine whether a given king move is valid (or not).
  */
-pub fn can_king_move(_board: Board, _from: Square, _to: Square) -> bool {
-    false
+pub fn can_king_move(_board: Board, from: Square, to: Square) -> bool {
+    // Determine absolute difference in column
+    let dcol = abs_diff_column(from,to);
+    // Determine absolute different in row
+    let drow = abs_diff_row(from,to);
+    //
+    (dcol == 1 || drow == 1) && dcol <= 1 && drow <= 1
 }
 
 /**
- * Check whether a given diagonol in the board consists of internal
+ * Check whether a given diagonal in the board consists of internal
  * blanks.  That is, all positions are blank *except* the start and
  * end square.  Furthermore, if the path between the two points is not
- * a diagonol then return false.
+ * a diagonal then return false.
  */
 fn clear_diagonal_inner(board: Board, from: Square, to: Square) -> bool {
     let diff_col = abs_diff_column(from,to);
     let diff_row = abs_diff_row(from,to);
-    // Sanity check is diagonol
+    // Sanity check is diagonal
     if diff_col != diff_row || diff_col == 0 {
-	return false;
+	false
+    } else {
+	// Check inner all blanks
+	clear_inner(board,from,to)
     }
-    // This could be improved!
+}
+
+/**
+ * Check whether a given straight (i.e. row or column) in the board
+ * consists of internal blanks.  That is, all positions are blank
+ * *except* the start and end square.  Furthermore, if the path
+ * between the two points is not straight then return false.
+ */
+fn clear_straight_inner(board: Board, from: Square, to: Square) -> bool {
+    let diff_col = abs_diff_column(from,to);
+    let diff_row = abs_diff_row(from,to);
+    // Sanity check is straight
+    if (diff_col != 0 && diff_row != 0) || diff_col == diff_row {
+	false
+    } else {
+	// Check inner all blanks	
+	clear_inner(board,from,to)
+    }    
+}
+
+/**
+ * Check whether a given straight or diagonal in the board consists of
+ * internal blanks.  That is, all positions are blank *except* the
+ * start and end square.  Note that if the path between the two points
+ * is not a diagonal or straight, then this may loop indefinitely.
+ */
+fn clear_inner(board: Board, from: Square, to: Square) -> bool {
+    // Extract markers
     let mut col : i8 = from.column() as i8;
     let mut row : i8 = from.row() as i8;
-    let start_row : i8 = from.row() as i8;	
+    let start_col : i8 = from.column() as i8;
+    let start_row : i8 = from.row() as i8;
     let end_col : i8 = to.column() as i8;
     let end_row : i8 = to.row() as i8;
-    let col_dir : i8 = if col < end_col { 1 } else { -1 };
-    let row_dir : i8  = if row < end_row { 1 } else { -1 };
-    // Sanity check only blanks on diagonol
-    while row != end_row && col != end_col {
-	if row != start_row && row != end_row
+    let col_dir : i8 = cmp(col,end_col);
+    let row_dir : i8  = cmp(row,end_row);
+    //
+    while row != end_row || col != end_col {
+	if (row != start_row || col != start_col) && (row != end_row || col != end_col)
 	    && board.get(Square::new(col as u8,row as u8)) != BLANK {
-	    return false;
-	}
+		return false;
+	    }
 	col += col_dir;
 	row += row_dir;
     }
@@ -285,9 +321,21 @@ fn abs_diff_row(from: Square, to: Square) -> u8 {
     cmp::max(from.row(),to.row()) - cmp::min(from.row(),to.row())
 }
 
+/**
+ * Compare two items and return their relative sign.
+ */
+fn cmp(x: i8, y: i8) -> i8 {
+    if x == y {
+    	0
+    } else if x < y {
+    	1
+    } else {
+    	-1
+    }
+}
 
 /**
- * Provide textual representation of pieces, where white's pieces are
+ * provide textual representation of pieces, where white's pieces are
  * uppercase and black's are lowercase.
  */
 impl fmt::Display for Piece {
