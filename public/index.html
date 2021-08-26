@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+  </head>
+  <body>
+    
+    <canvas id="myCanvas" tabindex="1" width="400" height="400"></canvas>          
+
+    <script type="module">      
+      import init, { draw } from './pkg/chess.js';
+
+      async function run() {
+          await init();
+	  // Get my canvas!
+	  var canvas = document.getElementById("myCanvas");	  
+          // Draw to it!
+          draw(canvas.getContext("2d"));
+      }
+      run();
+    </script>
+  </body>
+</html>
